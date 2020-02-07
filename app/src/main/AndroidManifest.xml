@@ -35,7 +35,8 @@
         </receiver>
 
         <service android:name=".IncomingCallService"
-            android:enabled="true"></service>
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
