@@ -61,14 +61,6 @@ public class CallerIdentification extends AppCompatActivity {
 
         setContentView(R.layout.activity_caller_identification);
 
-        Button btnTest = (Button) findViewById(R.id.btnTest);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showNumberNotification();
-            }
-        });
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             askPermission();
@@ -83,64 +75,11 @@ public class CallerIdentification extends AppCompatActivity {
         }
     }
 
-    private void showNumberNotification() {
-        try {
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-                NotificationChannel mChannel = new NotificationChannel(CHANNNEL_ID, CHANNEL_NAME, importance);
-                mChannel.setDescription(CHANNEL_DESC);
-                mChannel.enableLights(true);
-                mChannel.setLightColor(Color.RED);
-                mChannel.enableVibration(true);
-                mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-                mNotificationManager.createNotificationChannel(mChannel);
-
-                //Creating the notifiction builder object
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNNEL_ID)
-                        .setSmallIcon(android.R.drawable.ic_dialog_email)
-                        .setContentTitle("Hey this is Simplified Coding...")
-                        .setContentText("Please share your name with us")
-                        .setAutoCancel(true);
-
-                //finally displaying the notification
-                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            //Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @TargetApi(23)
     public void askPermission() {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:" + getPackageName()));
         startActivityForResult(intent, SYSTEM_ALERT_WINDOW_PERMISSION);
-    }
-
-    private void showDialog(String number) {
-        final Dialog dialog = new Dialog(CallerIdentification.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.popup_layout);
-
-        TextView text = (TextView) dialog.findViewById(R.id.text);
-        text.setText(number);
-
-        ImageButton dialogButton = (ImageButton) dialog.findViewById(R.id.ib_close);
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override
@@ -165,13 +104,6 @@ public class CallerIdentification extends AppCompatActivity {
         if (requestCode == SYSTEM_ALERT_WINDOW_PERMISSION) {
             askedForOverlayPermission = false;
             if (Settings.canDrawOverlays(this)) {
-                // SYSTEM_ALERT_WINDOW permission not granted...
-                //Toast.makeText(MyProtector.getContext(), "ACTION_MANAGE_OVERLAY_PERMISSION Permission Granted", Toast.LENGTH_SHORT).show();
-               /* InterceptCall myReceiver= new InterceptCall();
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-
-                registerReceiver(myReceiver, filter);*/
             } else {
                 Toast.makeText(CallerIdentification.this, "ACTION_MANAGE_OVERLAY_PERMISSION Permission Denied", Toast.LENGTH_SHORT).show();
             }
