@@ -75,6 +75,12 @@ public class CallerWorker extends Worker {
     private void showNumberNotification(String incomingCallNumber) {
         try {
 
+            RemoteViews contentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.customnotification_layout);
+            contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
+            contentView.setTextViewText(R.id.title, "ProducerMAX");
+            contentView.setTextViewText(R.id.text, incomingCallNumber);
+
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 NotificationManager mNotificationManager =
                         (NotificationManager)getApplicationContext(). getSystemService(Context.NOTIFICATION_SERVICE);
@@ -90,8 +96,9 @@ public class CallerWorker extends Worker {
                 //Creating the notifiction builder object
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNNEL_ID)
                         .setSmallIcon(android.R.drawable.ic_dialog_email)
-                        .setContentTitle("Caller Identification")
+                        //.setContentTitle("Caller Identification")
                         .setContentText(incomingCallNumber)
+                        .setContent(contentView)
                         .setAutoCancel(true);
 
                 //finally displaying the notification
@@ -106,8 +113,10 @@ public class CallerWorker extends Worker {
                     manager.createNotificationChannel(channel);
                 }
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNNEL_ID)
-                        .setContentTitle("Caller Identification")
+                        //.setContentTitle("Caller Identification")
+                        //.setContentText(incomingCallNumber)
                         .setContentText(incomingCallNumber)
+                        .setContent(contentView)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setSmallIcon(R.mipmap.ic_launcher);
                 manager.notify(1, builder.build());
